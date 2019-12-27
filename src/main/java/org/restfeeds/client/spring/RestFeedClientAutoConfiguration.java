@@ -9,17 +9,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(FeedReader.class)
-@ConditionalOnProperty(
-    value = "restfeed.client.enabled",
-    havingValue = "true",
-    matchIfMissing = true)
 public class RestFeedClientAutoConfiguration {
 
   final RestFeedClientConfigurationProperties properties;
@@ -29,7 +24,10 @@ public class RestFeedClientAutoConfiguration {
   }
 
   @Bean
-  public CommandLineRunner feedReaderRunner(FeedReader feedReader) {
+  @ConditionalOnProperty(
+      value = "restfeed.client.enabled",
+      havingValue = "true",
+      matchIfMissing = true)  public CommandLineRunner feedReaderRunner(FeedReader feedReader) {
     return args -> feedReader.read();
   }
 

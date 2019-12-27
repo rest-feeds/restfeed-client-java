@@ -1,16 +1,19 @@
 package org.restfeeds.client;
 
 import static java.time.temporal.ChronoUnit.SECONDS;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
 
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Objects;
+import java.util.logging.Logger;
 
 public class FeedReader {
 
-  private static final Logger log = LoggerFactory.getLogger(FeedReader.class);
+  private static final Logger logger = Logger.getLogger(FeedReader.class.getName());
 
   private final String feedBaseUrl;
   private final FeedItemConsumer consumer;
@@ -25,6 +28,7 @@ public class FeedReader {
       FeedItemConsumer consumer,
       FeedReaderRestClient feedReaderRestClient,
       NextLinkRepository nextLinkRepository) {
+    Objects.requireNonNull(feedBaseUrl, "feed url is not set");
     this.feedBaseUrl = feedBaseUrl;
     this.consumer = consumer;
     this.feedReaderRestClient = feedReaderRestClient;
@@ -36,22 +40,22 @@ public class FeedReader {
     while (!stopped) {
       String link = nextLinkRepository.get(feedBaseUrl).orElse(feedBaseUrl);
       try {
-        log.info("Read {}", link);
+        logger.log(INFO, "Reading {0}", link);
         List<FeedItem> items = feedReaderRestClient.getFeedItems(link);
         for (FeedItem feedItem : items) {
-          log.debug("Consuming feed item {}", feedItem.getId());
+          logger.log(FINE, "Consuming feed item {0}", feedItem.getId());
           consumer.accept(feedItem);
           saveLink(feedBaseUrl, feedItem.getNext());
         }
       } catch (Exception e) {
-        log.warn("Exception reading feed {}", link, e);
+        logger.log(WARNING, "Exception reading feed " + link, e);
         delayNextRetry();
       }
     }
   }
 
   public void stop() {
-    log.info("Stop feed reading");
+    logger.info("Stop feed reading");
     this.stopped = true;
   }
 
@@ -64,7 +68,7 @@ public class FeedReader {
     if (!URI.create(nextLink).isAbsolute()) {
       link = URI.create(feed).resolve(nextLink).toString();
     }
-    log.debug("Saving next link {}", link);
+    logger.log(FINE, "Saving next link {0}", link);
     nextLinkRepository.save(feed, link);
   }
 
