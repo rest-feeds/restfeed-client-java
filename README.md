@@ -82,24 +82,31 @@ The Spring [RestFeedClientAutoConfiguration](src/main/java/org/restfeeds/client/
 
 Implement this interface to perform the HTTP connection to the feed endpoint, authenticate, negotiate the content type and do the unmarshalling.
 
-The Spring [RestFeedClientAutoConfiguration](src/main/java/org/restfeeds/client/spring/RestFeedClientAutoConfiguration.java) configures an [`RestTemplateFeedReaderRestClient`](src/main/java/org/restfeeds/client/spring/RestTemplateFeedReaderRestClient.java), when no other `FeedReaderRestClient` bean was created.
+The Spring [RestFeedClientAutoConfiguration](src/main/java/org/restfeeds/client/spring/RestFeedClientAutoConfiguration.java) configures a [`RestTemplateFeedReaderRestClient`](src/main/java/org/restfeeds/client/spring/RestTemplateFeedReaderRestClient.java), when no other `FeedReaderRestClient` bean was created.
+Consider configuring the [`RestTemplateBuilder`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-resttemplate) for your needs.
 
 
 ## Spring Properties
 
+[RestFeedClientAutoConfiguration](src/main/java/org/restfeeds/client/spring/RestFeedClientAutoConfiguration.java) uses these properties:
+
 | Key | Default Value | Description
 | --- | --- | --- 
-| `restfeed.client.enabled` | `true` | Run FeedReader on application start.
-| `restfeed.client.url` |   | The base URL of the feed endpoint to consume.
-| `restfeed.client.username` |       | The username for basic authentication. Optional.
-| `restfeed.client.password` |       | The password for basic authentication. Optional.
+| `restfeed.client.enabled`  | `true` | Enable REST feed client auto configuration and run FeedReader on application start.
+| `restfeed.client.url`      |        | The base URL of the feed endpoint to consume. Required.
+| `restfeed.client.username` |        | The username for basic authentication. Optional.
+| `restfeed.client.password` |        | The password for basic authentication. Optional.
 
 
-## Other Java Stacks
+## FAQ
 
-The library is written in pure Java and has no transitive compile dependencies.
+### How to disable the embedded web server
 
-Feel free to implement a library in Java EE, Quarkus, Kotlin, Spring Webflux, etc.
+Spring Web automatically starts up a Tomcat server on port 8080.
 
-Further examples are highly appreciated.
+Set this property to disable:
+
+```properties
+spring.main.web-application-type=none
+```
 

@@ -15,6 +15,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(FeedReader.class)
+@ConditionalOnProperty(
+    value = "restfeed.client.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class RestFeedClientAutoConfiguration {
 
   final RestFeedClientConfigurationProperties properties;
@@ -24,10 +28,7 @@ public class RestFeedClientAutoConfiguration {
   }
 
   @Bean
-  @ConditionalOnProperty(
-      value = "restfeed.client.enabled",
-      havingValue = "true",
-      matchIfMissing = true)  public CommandLineRunner feedReaderRunner(FeedReader feedReader) {
+  public CommandLineRunner feedReaderRunner(FeedReader feedReader) {
     return args -> feedReader.read();
   }
 
