@@ -12,10 +12,10 @@
   </parent>
 
   <groupId>org.restfeeds</groupId>
-  <artifactId>rest-feed-client</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <artifactId>restfeed-client</artifactId>
+  <version>0.0.1</version>
 
-  <name>rest-feed-client</name>
+  <name>restfeed-client</name>
   <description>Client library for Rest Feed consumers.</description>
   <url>https://github.com/rest-feeds/rest-feeds</url>
 
