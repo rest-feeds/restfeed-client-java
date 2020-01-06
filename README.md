@@ -63,12 +63,12 @@ The Spring [RestFeedClientAutoConfiguration](src/main/java/org/restfeeds/client/
 
 ### [FeedItemConsumer](src/main/java/org/restfeeds/client/FeedItemConsumer.java)
 
-Implement [FeedItemConsumer](src/main/java/org/restfeeds/client/FeedItemConsumer.java) interface, to handle feed items.
+Implement [FeedItemConsumer](src/main/java/org/restfeeds/client/FeedItemConsumer.java) interface to handle feed items.
 
 
 ### [NextLinkRepository](src/main/java/org/restfeeds/client/NextLinkRepository.java)
 
-Provide an implementation, how the next link is stored.
+Provide an implementation how the next link is stored.
 The `save()` method is called directly after a feed item was consumed.
 
 Typically, the NextLinkRepository is implemented as a SQL or NoSQL database.
@@ -80,7 +80,7 @@ The Spring [RestFeedClientAutoConfiguration](src/main/java/org/restfeeds/client/
 
 ### [FeedReaderRestClient](src/main/java/org/restfeeds/client/FeedReaderRestClient.java)
 
-Implement this interface to perform the HTTP connection to the feed endpoint, authenticate, negotiate the content type and do the unmarshalling.
+Implement this interface to perform the HTTP connection to the feed endpoint, authenticate, negotiate the content type, and do the unmarshalling.
 
 The Spring [RestFeedClientAutoConfiguration](src/main/java/org/restfeeds/client/spring/RestFeedClientAutoConfiguration.java) configures a [`RestTemplateFeedReaderRestClient`](src/main/java/org/restfeeds/client/spring/RestTemplateFeedReaderRestClient.java), when no other `FeedReaderRestClient` bean was created.
 Consider configuring the [`RestTemplateBuilder`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-resttemplate) for your needs.
