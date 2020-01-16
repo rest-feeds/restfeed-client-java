@@ -6,7 +6,7 @@
 
   <groupId>org.restfeeds</groupId>
   <artifactId>restfeed-client</artifactId>
-  <version>git add pom.xml</version>
+  <version>0.0.3-SNAPSHOT</version>
 
   <name>restfeed-client</name>
   <description>Client library for Rest Feed consumers.</description>
