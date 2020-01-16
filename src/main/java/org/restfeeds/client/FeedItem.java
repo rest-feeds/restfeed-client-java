@@ -4,51 +4,68 @@ import java.util.StringJoiner;
 
 public class FeedItem {
 
-  private final String id;
-  private final String next;
-  private final String type;
-  private final String resource;
-  private final String method;
-  private final String timestamp;
-  private final Object data;
-
-  public FeedItem(String id, String next, String type, String resource, String method,
-      String timestamp, Object data) {
-    this.id = id;
-    this.next = next;
-    this.type = type;
-    this.resource = resource;
-    this.method = method;
-    this.timestamp = timestamp;
-    this.data = data;
-  }
+  private String id;
+  private String next;
+  private String type;
+  private String resource;
+  private String method;
+  private String timestamp;
+  private Object data;
 
   public String getId() {
     return id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getNext() {
     return next;
   }
 
+  public void setNext(String next) {
+    this.next = next;
+  }
+
   public String getType() {
     return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public String getResource() {
     return resource;
   }
 
+  public void setResource(String resource) {
+    this.resource = resource;
+  }
+
   public String getMethod() {
     return method;
+  }
+
+  public void setMethod(String method) {
+    this.method = method;
   }
 
   public String getTimestamp() {
     return timestamp;
   }
 
+  public void setTimestamp(String timestamp) {
+    this.timestamp = timestamp;
+  }
+
   public Object getData() {
     return data;
+  }
+
+  public void setData(Object data) {
+    this.data = data;
   }
 
   @Override
