@@ -55,7 +55,7 @@ class FeedReaderTests {
   @Test
   void shouldNotRead() throws Exception {
     AtomicInteger count = new AtomicInteger(0);
-    FeedReader feedReader = new MyExtendedFeedReader(
+    FeedReader feedReader = new FeedReader(
         "http://localhost/events",
         feedItem -> count.incrementAndGet(),
         new DummyFeedReaderRestClient(),
@@ -80,7 +80,7 @@ class FeedReaderTests {
     AtomicInteger onAfterReadCount = new AtomicInteger(0);
     AtomicInteger onBeforeStopCount = new AtomicInteger(0);
     AtomicInteger onAfterStopCount = new AtomicInteger(0);
-    FeedReader feedReader = new MyExtendedFeedReader(
+    FeedReader feedReader = new FeedReader(
         "http://localhost/events",
         feedItem -> count.incrementAndGet(),
         new DummyFeedReaderRestClient(),
@@ -183,15 +183,5 @@ class FeedReaderTests {
       feedItems.add(feedItem);
       return feedItems;
     }
-  }
-
-  private abstract static class MyExtendedFeedReader extends FeedReader {
-
-    public MyExtendedFeedReader(String feedBaseUrl, FeedItemConsumer consumer,
-        FeedReaderRestClient feedReaderRestClient,
-        NextLinkRepository nextLinkRepository) {
-      super(feedBaseUrl, consumer, feedReaderRestClient, nextLinkRepository);
-    }
-
   }
 }
