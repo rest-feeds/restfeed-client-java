@@ -46,10 +46,12 @@ public class FeedReader {
           onBeforeRead();
           logger.log(INFO, "Reading {0}", link);
           List<FeedItem> items = feedReaderRestClient.getFeedItems(link);
-          for (FeedItem feedItem : items) {
-            logger.log(FINE, "Consuming feed item {0}", feedItem.getId());
-            consumer.accept(feedItem);
-            saveLink(feedBaseUrl, feedItem.getNext());
+          if (shouldAccept(link, items)) {
+            for (FeedItem feedItem : items) {
+              logger.log(FINE, "Consuming feed item {0}", feedItem.getId());
+              consumer.accept(feedItem);
+              saveLink(feedBaseUrl, feedItem.getNext());
+            }
           }
         } catch (Exception e) {
           logger.log(WARNING, "Exception reading feed " + link, e);
@@ -70,6 +72,10 @@ public class FeedReader {
   }
 
   protected boolean shouldRead() {
+    return true;
+  }
+
+  protected boolean shouldAccept(String link, List<FeedItem> feedItem) {
     return true;
   }
 
@@ -107,5 +113,13 @@ public class FeedReader {
       Thread.sleep(delayRetry.toMillis());
     } catch (InterruptedException ignored) {
     }
+  }
+
+  public String getFeedBaseUrl() {
+    return feedBaseUrl;
+  }
+
+  public NextLinkRepository getNextLinkRepository() {
+    return nextLinkRepository;
   }
 }

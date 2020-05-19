@@ -147,6 +147,27 @@ class FeedReaderTests {
 
   }
 
+  @Test
+  void shouldNotAcceptMoreThanOnce() throws Exception {
+    AtomicInteger count = new AtomicInteger(0);
+    FeedReader feedReader = new FeedReader(
+        "http://localhost/events",
+        feedItem -> count.incrementAndGet(),
+        new DummyFeedReaderRestClient(),
+        new InMemoryNextLinkRepository()) {
+
+      @Override
+      protected boolean shouldAccept(String link, List<FeedItem> feedItem) {
+        return count.get() < 1;
+      }
+
+    };
+
+    new Thread(feedReader::read).start();
+    Thread.sleep(300L);
+    assertEquals(1, count.get());
+  }
+
 
   private static class DummyFeedReaderRestClient implements FeedReaderRestClient {
 
