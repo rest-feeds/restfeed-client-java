@@ -53,11 +53,10 @@ public class FeedReader {
               saveLink(feedBaseUrl, feedItem.getNext());
             }
           }
+          onAfterReadSuccess(items);
         } catch (Exception e) {
           logger.log(WARNING, "Exception reading feed " + link, e);
           delayNextRetry();
-        } finally {
-          onAfterRead();
         }
       }
 
@@ -83,7 +82,7 @@ public class FeedReader {
     // hook for subclasses
   }
 
-  protected void onAfterRead() {
+  protected void onAfterReadSuccess(List<FeedItem> readItems) {
     // hook for subclasses
   }
 

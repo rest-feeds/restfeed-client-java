@@ -77,7 +77,7 @@ class FeedReaderTests {
   void shouldInvokeHooks() throws Exception {
     AtomicInteger count = new AtomicInteger(0);
     AtomicInteger onBeforeReadCount = new AtomicInteger(0);
-    AtomicInteger onAfterReadCount = new AtomicInteger(0);
+    AtomicInteger onAfterReadSuccessCount = new AtomicInteger(0);
     AtomicInteger onBeforeStopCount = new AtomicInteger(0);
     AtomicInteger onAfterStopCount = new AtomicInteger(0);
     FeedReader feedReader = new FeedReader(
@@ -101,9 +101,9 @@ class FeedReaderTests {
       }
 
       @Override
-      protected void onAfterRead() {
-        int i = onAfterReadCount.incrementAndGet();
-        logger.log(Level.INFO, "onAfterRead called {0} time(s)", i);
+      protected void onAfterReadSuccess(List<FeedItem> items) {
+        int i = onAfterReadSuccessCount.incrementAndGet();
+        logger.log(Level.INFO, "onAfterReadSuccess called {0} time(s)", i);
         if (1 == onBeforeReadCount.get()) {
           shouldRead = false;
         }
@@ -129,7 +129,7 @@ class FeedReaderTests {
 
     assertEquals(1, count.get(), "Consumer should be called 1 time.");
     assertEquals(1, onBeforeReadCount.get(), "onBeforeRead should be called 1 time.");
-    assertEquals(1, onAfterReadCount.get(), "onAfterRead should be called 1 time.");
+    assertEquals(1, onAfterReadSuccessCount.get(), "onAfterReadSuccess should be called 1 time.");
     assertEquals(0, onBeforeStopCount.get(), "onBeforeStop should not be called before stopping.");
     assertEquals(0, onAfterStopCount.get(), "onAfterStop should not be called before stopping.");
 
@@ -141,7 +141,7 @@ class FeedReaderTests {
 
     assertEquals(1, count.get(), "Consumer should be called 1 time.");
     assertEquals(1, onBeforeReadCount.get(), "onBeforeRead should be called 1 time.");
-    assertEquals(1, onAfterReadCount.get(), "onAfterRead should be called 1 time.");
+    assertEquals(1, onAfterReadSuccessCount.get(), "onAfterReadSuccess should be called 1 time.");
     assertEquals(1, onBeforeStopCount.get(), "onBeforeStop should be called 1 time.");
     assertEquals(1, onAfterStopCount.get(), "onAfterStop should be called 1 time.");
 
