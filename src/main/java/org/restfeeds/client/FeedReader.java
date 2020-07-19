@@ -38,25 +38,60 @@ public class FeedReader {
   public void read() {
 
     while (!stopped) {
-      String link = nextLinkRepository.get(feedBaseUrl).orElse(feedBaseUrl);
-      try {
-        logger.log(INFO, "Reading {0}", link);
-        List<FeedItem> items = feedReaderRestClient.getFeedItems(link);
-        for (FeedItem feedItem : items) {
-          logger.log(FINE, "Consuming feed item {0}", feedItem.getId());
-          consumer.accept(feedItem);
-          saveLink(feedBaseUrl, feedItem.getNext());
+
+      if (shouldRead()) {
+
+        String link = nextLinkRepository.get(feedBaseUrl).orElse(feedBaseUrl);
+        try {
+          onBeforeRead();
+          logger.log(INFO, "Reading {0}", link);
+          List<FeedItem> items = feedReaderRestClient.getFeedItems(link);
+          if (shouldAccept(link, items)) {
+            for (FeedItem feedItem : items) {
+              logger.log(FINE, "Consuming feed item {0}", feedItem.getId());
+              consumer.accept(feedItem);
+              saveLink(feedBaseUrl, feedItem.getNext());
+            }
+          }
+          onAfterReadSuccess(items);
+        } catch (Exception e) {
+          logger.log(WARNING, "Exception reading feed " + link, e);
+          delayNextRetry();
         }
-      } catch (Exception e) {
-        logger.log(WARNING, "Exception reading feed " + link, e);
-        delayNextRetry();
       }
+
     }
+    onAfterStop();
   }
 
   public void stop() {
+    onBeforeStop();
     logger.info("Stop feed reading");
     this.stopped = true;
+  }
+
+  protected boolean shouldRead() {
+    return true;
+  }
+
+  protected boolean shouldAccept(String link, List<FeedItem> feedItem) {
+    return true;
+  }
+
+  protected void onBeforeRead() {
+    // hook for subclasses
+  }
+
+  protected void onAfterReadSuccess(List<FeedItem> readItems) {
+    // hook for subclasses
+  }
+
+  protected void onBeforeStop() {
+    // hook for subclasses
+  }
+
+  protected void onAfterStop() {
+    // hook for subclasses
   }
 
   public void setDelayRetry(Duration delayRetry) {
@@ -77,5 +112,13 @@ public class FeedReader {
       Thread.sleep(delayRetry.toMillis());
     } catch (InterruptedException ignored) {
     }
+  }
+
+  public String getFeedBaseUrl() {
+    return feedBaseUrl;
+  }
+
+  public NextLinkRepository getNextLinkRepository() {
+    return nextLinkRepository;
   }
 }
